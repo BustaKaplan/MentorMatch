@@ -1,0 +1,76 @@
+<aura:component controller = "getMentors" implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId" access="global" >
+    <aura:attribute name="mentors" type="SObject[]" />    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:attribute name="recordId" type="String" /> 
+    
+    <lightning:card>
+        
+            <lightning:button class = "slds-float_right" name="Match" variant="brand" label="Match" onclick="{!c.matchSelected}"/>
+        <table aria-multiselectable="true" class="slds-table slds-table_bordered slds-table_fixed-layout slds-table_resizable-cols" role="grid">
+			<!--Header-->
+            <thead>
+				<tr class="slds-line-height_reset">
+					<th class="slds-text-align_right" scope="col" style="width:3.25rem"></th>
+					<th aria-label="Name" aria-sort="none" class="slds-is-resizable slds-is-sortable" scope="col">
+						<a class="slds-th__action slds-text-link_reset" href="#" role="button" tabindex="0">
+							<div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate">
+								<span class="slds-truncate" title="Name">Name</span>
+							</div>
+						</a>
+					</th>
+					<th aria-label="Industry" aria-sort="none" class="slds-is-resizable slds-is-sortable" scope="col">
+						<a class="slds-th__action slds-text-link_reset" href="#" role="button" tabindex="0">
+                            <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate">
+                                <span class="slds-truncate" title="Industry">Industry</span>
+                            </div>
+                        </a>
+					</th>
+                    <th aria-label="Close Date" aria-sort="none" class="slds-is-resizable slds-is-sortable" scope="col">
+                        <a class="slds-th__action slds-text-link_reset" href="#" role="button" tabindex="0">
+                            <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate">
+                            	<span class="slds-truncate" title="Close Date">Function</span>
+                            </div>
+                        </a>
+                    </th>
+                    <th aria-label="Match Score" aria-sort="none" class="slds-is-resizable slds-is-sortable" scope="col">
+                        <a class="slds-th__action slds-text-link_reset" href="#" role="button" tabindex="0">
+                            <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate">
+                            	<span class="slds-truncate" title="Close Date">Match Score</span>
+                            </div>
+                        </a>
+                    </th>
+				</tr>
+			</thead>
+            <tbody>
+                <aura:iteration items="{!v.mentors}" var="item">
+                    <tr aria-selected="false" class="slds-hint-parent">
+                        <!--Checkbox-->
+                        <td class="slds-text-align_right" role="gridcell">
+                            <div class="slds-checkbox">
+                                <input type="checkbox" name="options" id="checkbox-01" value="checkbox-01" tabindex="0" aria-labelledby="check-button-label-01 column-group-header" />
+                                <label class="slds-checkbox__label" for="checkbox-01" id="check-button-label-01">
+                                    <span class="slds-checkbox_faux"></span>
+                                    <span class="slds-form-element__label slds-assistive-text">Select item 1</span>
+                                </label>
+                            </div>
+                        </td>
+                        <th scope="row">
+                        	<div class="slds-truncate" title="Acme - 1,200 Widgets">
+                            	<a href="#" tabindex="0">{!item.hed__Applicant__r.Name}</a>
+                            </div>
+                        </th>
+                       	<td role="gridcell">
+                            	<div class="slds-truncate" title="{!item.Industry__c}">{!item.Industry__c}</div>
+                       	</td>
+                        <td role="gridcell">
+                        	<div class="slds-truncate" title = "{!item.Function__c}">{!item.Function__c}</div>
+                        </td>
+                        <td role="gridcell">
+                       		<div class="slds-truncate" title = "{!item.Function__c}">{!item.Match_Score__c}</div>
+                        </td>
+                    </tr>
+                </aura:iteration>
+			</tbody>
+		</table>
+	</lightning:card>   
+</aura:component>
