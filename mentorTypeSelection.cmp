@@ -1,0 +1,19 @@
+<aura:component controller = "getMentors" implements="flexipage:availableForAllPageTypes" access="global">
+    <aura:attribute name= "mentorPrograms" type="Account[]"/>
+    <aura:attribute name= "mentorProgramId" type="string"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    
+    <lightning:card>
+        <lightning:select aura:id="selectedProgram" name="selectedProgram" label="Choose a Mentorship Program" required="true" onchange="{!c.programSelected}">>
+            <option value="">None</option>
+       		<aura:iteration items="{!v.mentorPrograms}" var="item">
+            	<option value="{!item.Id}">{!item.Name}</option>
+            </aura:iteration>
+    	</lightning:select>
+    </lightning:card>
+    <c:MenteeList applyingTo="{!v.mentorProgramId}" />
+    	<aura:method name="sampleMethod" action="{!c.doAction}" description="Sample method with parameters"> 
+    		<aura:attribute name="param1" type="String" default="parameter 1"/> 
+    		<aura:attribute name="param2" type="Object" /> 
+		</aura:method>
+</aura:component>
