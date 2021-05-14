@@ -1,0 +1,11 @@
+<aura:component controller = "getMentors" >
+    <aura:attribute name= "applyingTo" type="String" default = "0011b00000xBkHfAAK"/>
+    <aura:handler name="change" value="{!v.applyingTo}" action="{!c.doAction}"/>
+    <aura:attribute name="mentees" type="hed__Application__c[]" /> 
+    <p>Hello World</p>
+    <p>Mantor Program Account Id: {!v.applyingTo}</p>
+    <aura:iteration items="{!v.mentees}" var="item">
+        {!item.Name}
+    </aura:iteration>
+	
+</aura:component>
