@@ -1,0 +1,18 @@
+public class MenteeWrapperClass {
+    @AuraEnabled public string Id;
+    @AuraEnabled public string Name;
+    @AuraEnabled public string IndustryData;
+    @AuraEnabled public string FunctionData;
+    @AuraEnabled public Integer matchScore;
+    @AuraEnabled public Decimal menteesData; 
+    
+    public MenteeWrapperClass(String recordid, String menteeName,String Industry,String function, Decimal mentees, Integer score){
+        System.debug(recordid + ' ' +  menteeName + ' ' + Industry + ' ' + function + ' ' + score );
+        Id = recordid;
+        Name = menteeName;
+        IndustryData = Industry;
+        FunctionData = function;
+        menteesData = mentees;
+        matchScore = score;
+    }
+}
