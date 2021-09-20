@@ -1,26 +1,25 @@
 <aura:component controller = "mentorMatchController" >
-    <!--default = "0011b00000xBkHfAAK"-->
     <aura:attribute name= "applyingTo" type="String" />
     <aura:attribute name= "selectedApplication" type="String" />
     <aura:handler name="change" value="{!v.applyingTo}" action="{!c.doAction}"/>
     <aura:attribute name="mentees" type="hed__Application__c[]" /> 
-    
     <aura:attribute type="String"  name="sortField" />
     <aura:attribute type="Boolean" name="sortAsc" />
     <aura:handler name="init" value="{!v.applyingTo}" action="{!c.doInit}" />
+    <!--Table Properties -->
+    <aura:attribute name="mouseStart" type="string" />
+    <aura:attribute name="oldWidth" type="string" />
     
-    <div class="slds-grid slds-wrap">
-        <div class="slds-col slds-size_1-of-2">
+        <!--<div class="slds-col slds-size_1-of-2">-->
             <Lightning:card class="slds-p-around_medium" >                
                 <table aria-multiselectable="true" class="slds-table slds-table_bordered slds-table_fixed-layout slds-table_resizable-cols" role="grid" aria-label="Mentee Table">
                     <thead>
                         <tr class="slds-line-height_reset">
-                            <th aria-label="Name" aria-sort="ascending" class="slds-is-resizable slds-is-sortable  slds-is-sorted slds-is-sorted_asc" scope="col">
-                                <a class="slds-th__action slds-text-link_reset" href="#" role="button" tabindex="0">
-                                    <span class="slds-assistive-text">Sort by: </span>
+                            <th aria-label="Name" aria-sort="ascending" class="slds-is-resizable slds-is-sortable  slds-is-sorted slds-is-sorted_asc " scope="col">
+                                <a class="slds-th__action slds-text-link_reset" href="javascript:void(0);" role="button" tabindex="0">
                                     <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate" onclick="{!c.sortByName}">
                                         <span class="slds-truncate" title="Name">Name</span>
-                                        <aura:if isTrue="{!v.sortField=='Name'}">
+                                        <aura:if isTrue="{!v.sortField=='hed__Applicant__r.Name'}">
                                             <span>
                                                 <aura:if isTrue="{!v.sortAsc}">
                                                     &#8593;
@@ -36,17 +35,17 @@
                                 </a>
                                 <div class="slds-resizable">
                                     <input type="range" aria-label="Name column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-533" max="1000" min="20" tabindex="0" />
-                                    <span class="slds-resizable__handle">
+                                    <span class="slds-resizable__handle" onmousedown="{!c.calculateWidth}" ondrag="{!c.setNewWidth}">
                                         <span class="slds-resizable__divider"></span>
                                     </span>
                                 </div>
                             </th>
                             <th aria-label="Industry" aria-sort="none" class="slds-is-resizable slds-is-sortable" scope="col">
-                                <a class="slds-th__action slds-text-link_reset" href="#" role="button" tabindex="0">
+                                <a class="slds-th__action slds-text-link_reset" href="javascript:void(0);" role="button" tabindex="0">
                                     <span class="slds-assistive-text">Sort by: </span>
-                                    <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate" onclick="{!c.sortByName}">
+                                    <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate" onclick="{!c.sortByIndustry}">
                                         <span class="slds-truncate" title="Industry">Industry</span>
-                                        <aura:if isTrue="{!v.sortField=='Industry'}">
+                                        <aura:if isTrue="{!v.sortField=='Industry__c'}">
                                             <span>
                                                 <aura:if isTrue="{!v.sortAsc}">
                                                     &#8593;
@@ -62,17 +61,43 @@
                                 </a>
                                 <div class="slds-resizable">
                                     <input type="range" aria-label="Account Name column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-534" max="1000" min="20" tabindex="0" />
-                                    <span class="slds-resizable__handle">
+                                    <span class="slds-resizable__handle" onmousedown="{!c.calculateWidth}" ondrag="{!c.setNewWidth}">
                                         <span class="slds-resizable__divider"></span>
                                     </span>
                                 </div>
                             </th>
                             
                             <th aria-label="Function" aria-sort="none" class="slds-is-resizable slds-is-sortable" scope="col">
-                                <a class="slds-th__action slds-text-link_reset" href="#" role="button" tabindex="0">
+                                <a class="slds-th__action slds-text-link_reset" href="javascript:void(0);" role="button" tabindex="0">
+                                    <span class="slds-assistive-text">Sort by: </span>
+                                    <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate" onclick="{!c.sortByFunction}">
+                                        <span class="slds-truncate" title="Function">Function</span>
+                                        <aura:if isTrue="{!v.sortField=='Function__c'}">
+                                            <span>
+                                                <aura:if isTrue="{!v.sortAsc}">
+                                                    &#8593;
+                                                    <aura:set attribute="else">
+                                                        &#8595;
+                                                    </aura:set>
+                                                </aura:if>
+                                            </span>
+                                        </aura:if>
+                                        <span class="slds-icon_container slds-icon-utility-arrowdown">                                            
+                                        </span>
+                                    </div>
+                                </a>
+                                <div class="slds-resizable">
+                                    <input type="range" aria-label="Stage column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-536" max="1000" min="20" tabindex="0" />
+                                    <span class="slds-resizable__handle" onmousedown="{!c.calculateWidth}" ondrag="{!c.setNewWidth}">
+                                        <span class="slds-resizable__divider"></span>
+                                    </span>
+                                </div>
+                            </th>
+                            <th aria-label="Mentors" aria-sort="none" class="slds-is-resizable slds-is-sortable" scope="col">
+                                <a class="slds-th__action slds-text-link_reset" href="javascript:void(0);" role="button" tabindex="0">
                                     <span class="slds-assistive-text">Sort by: </span>
                                     <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate" onclick="{!c.sortByName}">
-                                        <span class="slds-truncate" title="Function">Function</span>
+                                        <span class="slds-truncate" title="Function">Mentors</span>
                                         <aura:if isTrue="{!v.sortField=='Function'}">
                                             <span>
                                                 <aura:if isTrue="{!v.sortAsc}">
@@ -89,7 +114,7 @@
                                 </a>
                                 <div class="slds-resizable">
                                     <input type="range" aria-label="Stage column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-536" max="1000" min="20" tabindex="0" />
-                                    <span class="slds-resizable__handle">
+                                    <span class="slds-resizable__handle" onmousedown="{!c.calculateWidth}" ondrag="{!c.setNewWidth}">
                                         <span class="slds-resizable__divider"></span>
                                     </span>
                                 </div>
@@ -97,11 +122,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <aura:iteration items="{!v.mentees}" var="item">   
-                            <tr aria-selected="true" class="slds-hint-parent slds-is-selected" data-myid="{!item.Id}" onclick="{!c.menteeSelected }" >                        
+                        <aura:iteration items="{!v.mentees}" var="item"> 
+                            <!--slds-is-selected-->
+                            <tr aria-selected="true" class="slds-hint-parent" data-myid="{!item.Id}" onclick="{!c.menteeSelected }" >                        
                                 <th scope="row" >
                                     <div class="slds-truncate" title="{!item.hed__Applicant__r.Name}">
-                                        <a href="#" tabindex="0">{!item.hed__Applicant__r.Name}</a>
+                                        {!item.hed__Applicant__r.Name}
                                     </div>
                                 </th>
                                 <td role="gridcell">
@@ -109,15 +135,15 @@
                                 </td>
                                 <td role="gridcell">
                                     <div class="slds-truncate" title = "{!item.Function__c}">{!item.Function__c}</div>
+                                </td> 
+                                 <td role="gridcell">
+                                    <div class="slds-truncate" title = "{!item.hed__Applicant__r.Mentors__c}">{!item.hed__Applicant__r.Mentors__c}</div>
                                 </td>  
                             </tr>
                         </aura:iteration>
                     </tbody>
                 </table>
             </Lightning:card>
-        </div>
-        <div class="slds-col slds-size_1-of-2">
-            <c:MentorMatch recordId="{!v.selectedApplication}" />
-        </div>
-    </div>
+            <c:MentorMatch recordId="{!v.selectedApplication}" aura:id="child"/>
+        <!--</div>-->
 </aura:component>
