@@ -1,0 +1,43 @@
+public class mentorMatchController {  
+    @AuraEnabled
+    public static List<MenteeWrapperClass> getMentorRecords(Id recordId){
+        hed__Application__c primaryApplication = [Select hed__Applying_To__c, Industry__c, Function__c, RecordType.Name FROM hed__Application__c WHERE Id = :recordId LIMIT 1];
+        
+        string primaryApplicationRecordType = primaryApplication.RecordType.Name == 'Mentee' ? 'Mentor' : 'Mentee';        
+        List<hed__Application__c> matchApplications = [SELECT hed__Applicant__r.Name, Industry__c, Function__c, hed__Applicant__r.Mentees__c FROM hed__Application__c WHERE hed__Applying_To__c = :primaryApplication.hed__Applying_To__c AND recordType.Name = :primaryApplicationRecordType AND Start_Date__c <= TODAY AND End_Date__c >= TODAY];
+			
+        List<MenteeWrapperClass> wrapperClassList = new List<MenteeWrapperClass>();
+        for (hed__Application__c matchApp : matchApplications) {
+            Integer matchScore = 0;
+            if (matchApp.Industry__c == primaryApplication.Industry__c) {
+                matchScore = 50 ; 
+            } if (matchApp.Function__c == primaryApplication.Function__c) {
+                matchScore = matchScore + 50;
+            }                         
+            wrapperClassList.add(new MenteeWrapperClass(matchApp.Id,matchApp.hed__Applicant__r.Name,matchApp.Industry__c,matchApp.Function__c,matchApp.hed__Applicant__r.Mentees__c,matchScore));           
+        } 
+        System.debug('hello ' + wrapperClassList);
+        //wrapperClassList.sort();
+        return wrapperClassList;        
+    }    
+	@AuraEnabled
+    public static List <Account> getMentorPrograms(){
+        return [SELECT Name, Id FROM Account WHERE is_Mentor_Program__c = TRUE];
+    }
+	@AuraEnabled
+    public static List<hed__Application__c> getMentees(Id applyingTo){
+        return [SELECT Name,hed__Applicant__r.Name, Id, Industry__c, Function__c, hed__Applicant__r.Mentors__c FROM hed__Application__c WHERE hed__Applying_To__c = :applyingTo AND RecordType.Name = 'Mentee' AND Start_Date__c <= TODAY AND End_Date__c >= TODAY];
+    }  
+    @AuraEnabled
+    Public static string createMatch(Id mentorApp, Id menteeApp){
+        hed__Relationship__c matchedRelationship = new hed__Relationship__c();
+        	matchedRelationship.hed__Contact__c = [SELECT hed__Applicant__c FROM hed__Application__c WHERE ID = :mentorApp LIMIT 1].hed__Applicant__c;
+        	matchedRelationship.hed__RelatedContact__c = [SELECT hed__Applicant__c FROM hed__Application__c WHERE ID = :menteeApp LIMIT 1].hed__Applicant__c;
+            matchedRelationship.hed__Type__c = 'Mentor';
+		
+        Insert matchedRelationship;
+        return [SELECT Name FROM hed__Relationship__c where Id = :matchedRelationship.Id LIMIT 1].Name;
+    }
+     
+
+}
