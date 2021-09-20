@@ -1,0 +1,4 @@
+.THIS tr.selectedMentorRow {
+    background-color:rgb(33, 160, 223,.5);
+    width:200px;
+}
