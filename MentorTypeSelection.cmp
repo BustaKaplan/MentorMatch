@@ -1,19 +1,37 @@
-<aura:component controller = "getMentors" implements="flexipage:availableForAllPageTypes" access="global">
+<aura:component controller = "mentorMatchController" implements="flexipage:availableForAllPageTypes" access="global">
     <aura:attribute name= "mentorPrograms" type="Account[]"/>
     <aura:attribute name= "mentorProgramId" type="string"/>
+    <aura:attribute name= "mentorApp" type="string"/>
+    <aura:attribute name= "menteeApp" type="string"/>
+    <aura:handler name="mentorEvent" event="c:MentorSelectEvent" action="{!c.mentorSelected}"/>
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
     
-    <lightning:card>
+    
+    <aura:method name="matchSelected"
+      description="Sample method with server-side call">
+        <aura:attribute name="callback" type="Function" />
+    </aura:method>
+    
+    <lightning:card class="slds-p-around_medium">
+        <!--Program Picklist -->
         <lightning:select aura:id="selectedProgram" name="selectedProgram" label="Choose a Mentorship Program" required="true" onchange="{!c.programSelected}">>
             <option value="">None</option>
        		<aura:iteration items="{!v.mentorPrograms}" var="item">
             	<option value="{!item.Id}">{!item.Name}</option>
             </aura:iteration>
     	</lightning:select>
+        <!--Match Button-->
+        <div class = "slds-p-around_medium">
+        	<lightning:button class = "slds-float_right" name="Match" variant="brand" label="Match" onclick="{!c.matchSelected}"/>
+        </div>
     </lightning:card>
-    <c:MenteeList applyingTo="{!v.mentorProgramId}" />
+    <c:MenteeList applyingTo="{!v.mentorProgramId}"/>
     	<aura:method name="sampleMethod" action="{!c.doAction}" description="Sample method with parameters"> 
     		<aura:attribute name="param1" type="String" default="parameter 1"/> 
     		<aura:attribute name="param2" type="Object" /> 
 		</aura:method>
+    <!--Spinner is shown and hidden based on if the components is creating a relationship record -->
+    <div class="slds-align--absolute-center">
+   		<lightning:spinner aura:id="spinner" variant="brand" size="large" class="slds-hide"/>
+    </div>
 </aura:component>
