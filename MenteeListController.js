@@ -21,18 +21,21 @@
         $A.enqueueAction(action);
     },
     
-    menteeSelected: function(component, event, helper) {
+    menteeSelected: function(component, event, helper) {        
+        //Pass selected application Id to the mentormatch component
+        var selectedAppliation = event.currentTarget.dataset.myid;
+    	component.set("v.selectedApplication", selectedAppliation);
+        
+        //Remove highlight from all previous selected rows
+        var oldRows = document.getElementsByClassName("selectedRow");
+        for (let i = 0; i < oldRows.length; i++) {
+            $A.util.removeClass(oldRows[i], 'selectedRow');
+        }
+        
+        //Highlight the selected row
         var selectedRow = event.currentTarget;
-    	var selectedApplication = event.currentTarget.dataset.myid;
+        $A.util.addClass(selectedRow, 'selectedRow');       
         
-    	//Pass selected application Id to the mentormatch component
-    	component.set("v.selectedApplication", selectedApplication);
-        console.log("selected application " +  selectedApplication);
-        
-        //Apply and remove select styling
-        $A.util.addClass(event.target, 'setSelected');
-        //var selectedRow = 
-        //var selectedApplication
     },
     
     
@@ -52,10 +55,36 @@
         helper.sortBy(component, "Name");
     },
     sortByIndustry: function(component, event, helper) {
-        helper.sortBy(component, "Industry");
+        helper.sortBy(component, "Industry__c");
     },
-    sortByAnnualRevenue: function(component, event, helper) {
-        helper.sortBy(component, "AnnualRevenue");
+    sortByFunction: function(component, event, helper) {
+        helper.sortBy(component, "Function__c");
+    },
+    calculateWidth : function(component, event, helper) {
+            var childObj = event.target
+            var parObj = childObj.parentNode;
+            var count = 1;
+            while(parObj.tagName != 'TH') {
+                parObj = parObj.parentNode;
+                count++;
+            }
+            console.log('final tag Name'+parObj.tagName);
+            var mouseStart=event.clientX;
+            component.set("v.mouseStart",mouseStart);
+            component.set("v.oldWidth",parObj.offsetWidth);
+    },
+    setNewWidth : function(component, event, helper) {
+            var childObj = event.target
+            var parObj = childObj.parentNode;
+            var count = 1;
+            while(parObj.tagName != 'TH') {
+                parObj = parObj.parentNode;
+                count++;
+            }
+            var mouseStart = component.get("v.mouseStart");
+            var oldWidth = component.get("v.oldWidth");
+            var newWidth = event.clientX- parseFloat(mouseStart)+parseFloat(oldWidth);
+            parObj.style.width = newWidth+'px';
     },
         
 })
